@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yskj.dao.NewsDao" >
+  <resultMap id="BaseResultMap" type="com.yskj.Entity.News" >
+    <id column="news_id" property="newsId" jdbcType="INTEGER" />
+    <result column="news_name" property="newsName" jdbcType="VARCHAR" />
+    <result column="news_url" property="newsUrl" jdbcType="VARCHAR" />
+    <result column="news_type" property="newsType" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="DATE" />
+    <result column="news_language" property="newsLanguage" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.yskj.Entity.News" extends="BaseResultMap" >
+    <result column="news_context" property="newsContext" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    news_id, news_name, news_url, news_type, create_time, news_language
+  </sql>
+  <sql id="Blob_Column_List" >
+    news_context
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from news
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByNewsType" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from news
+    where news_type = #{newsType,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from news
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yskj.Entity.News" >
+    insert into news (news_id, news_name, news_url,
+    news_type, create_time, news_language,
+    news_context)
+    values (#{newsId,jdbcType=INTEGER}, #{newsName,jdbcType=VARCHAR}, #{newsUrl,jdbcType=VARCHAR},
+    #{newsType,jdbcType=INTEGER}, #{createTime,jdbcType=DATE}, #{newsLanguage,jdbcType=INTEGER},
+    #{newsContext,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yskj.Entity.News" >
+    insert into news
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="newsId != null" >
+        news_id,
+      </if>
+      <if test="newsName != null" >
+        news_name,
+      </if>
+      <if test="newsUrl != null" >
+        news_url,
+      </if>
+      <if test="newsType != null" >
+        news_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="newsLanguage != null" >
+        news_language,
+      </if>
+      <if test="newsContext != null" >
+        news_context,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="newsId != null" >
+        #{newsId,jdbcType=INTEGER},
+      </if>
+      <if test="newsName != null" >
+        #{newsName,jdbcType=VARCHAR},
+      </if>
+      <if test="newsUrl != null" >
+        #{newsUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="newsType != null" >
+        #{newsType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="newsLanguage != null" >
+        #{newsLanguage,jdbcType=INTEGER},
+      </if>
+      <if test="newsContext != null" >
+        #{newsContext,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yskj.Entity.News" >
+    update news
+    <set >
+      <if test="newsName != null" >
+        news_name = #{newsName,jdbcType=VARCHAR},
+      </if>
+      <if test="newsUrl != null" >
+        news_url = #{newsUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="newsType != null" >
+        news_type = #{newsType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="newsLanguage != null" >
+        news_language = #{newsLanguage,jdbcType=INTEGER},
+      </if>
+      <if test="newsContext != null" >
+        news_context = #{newsContext,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.yskj.Entity.News" >
+    update news
+    set news_name = #{newsName,jdbcType=VARCHAR},
+      news_url = #{newsUrl,jdbcType=VARCHAR},
+      news_type = #{newsType,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=DATE},
+      news_language = #{newsLanguage,jdbcType=INTEGER},
+      news_context = #{newsContext,jdbcType=LONGVARCHAR}
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yskj.Entity.News" >
+    update news
+    set news_name = #{newsName,jdbcType=VARCHAR},
+      news_url = #{newsUrl,jdbcType=VARCHAR},
+      news_type = #{newsType,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=DATE},
+      news_language = #{newsLanguage,jdbcType=INTEGER}
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+
+  <select id="list" parameterType="Map" resultMap="BaseResultMap">
+    select * from news
+    <where>
+      <if test="newsType!=null and newsType!='' ">
+        and news_type = #{newsType}
+      </if>
+    </where>
+    order by news_id DESC
+    <if test="start!=null and size!=null">
+      limit #{start},#{size}
+    </if>
+  </select>
+
+  <select id="getTotal" parameterType="Map" resultType="Long">
+    select count(*) from news
+    <where>
+      <if test="newsType!=null and newsType!='' ">
+        and news_type = #{newsType}
+      </if>
+    </where>
+  </select>
+
+  <select id="getLastNews" parameterType="Integer" resultMap="BaseResultMap">
+    SELECT * FROM news WHERE news_id&lt;#{newsId} and news_type = 1 ORDER BY news_id DESC LIMIT 1
+  </select>
+
+  <select id="getNextNews" parameterType="Integer" resultMap="BaseResultMap">
+    SELECT * FROM news WHERE news_id&gt;#{newsId} and news_type = 1 ORDER BY news_id ASC LIMIT 1
+  </select>
+</mapper>

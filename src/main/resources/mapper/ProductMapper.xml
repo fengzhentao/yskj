@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yskj.dao.ProductDao" >
+  <resultMap id="BaseResultMap" type="com.yskj.Entity.Product" >
+    <id column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="two_type_id" property="twoTypeId" jdbcType="INTEGER" />
+    <result column="product_model" property="productModel" jdbcType="VARCHAR" />
+    <result column="language_type" property="languageType" jdbcType="INTEGER" />
+    <result column="recommend" property="recommend" jdbcType="INTEGER" />
+    <result column="one_type_id" property="oneTypeId" jdbcType="INTEGER" />
+    <result column="product_size" property="productSize" jdbcType="VARCHAR" />
+    <result column="product_url" property="productUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.yskj.Entity.Product" extends="BaseResultMap" >
+    <result column="product_context" property="productContext" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap id="AttResultMap" type="com.yskj.dto.ProductVo" extends="ResultMapWithBLOBs">
+    <id column="attachment_id" property="attachmentId" jdbcType="INTEGER" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="table_id" property="tableId" jdbcType="INTEGER" />
+    <result column="attachment_type" property="attachmentType" jdbcType="INTEGER" />
+    <result column="language" property="language" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="attachment_name" property="attachmentName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    product_id, product_name, two_type_id, product_model, language_type, recommend, one_type_id,
+    product_size,product_url
+  </sql>
+  <sql id="Blob_Column_List" >
+    product_context
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from product
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+
+  <select id="getList" resultMap="AttResultMap" parameterType="com.yskj.Entity.Product">
+    select * from product p LEFT JOIN attachment a on p.product_id = a.table_id and a.table_name = 'product' and a.attachment_type = 1
+    where 1=1
+    <if test="twoTypeId != null" >
+      and two_type_id = #{twoTypeId}
+    </if>
+    <if test="languageType != null" >
+      and language_type = #{languageType}
+    </if>
+    <if test="recommend != null" >
+      and recommend = #{recommend}
+    </if>
+    <if test="oneTypeId != null" >
+      and one_type_id = #{oneTypeId}
+    </if>
+    order by product_id DESC
+    <if test="start!=null and size!=null">
+      limit #{start},#{size}
+    </if>
+  </select>
+  <select id="getProductDetailById" resultMap="AttResultMap" parameterType="java.lang.Integer">
+    select * from product p LEFT JOIN attachment a on p.product_id = a.table_id and a.table_name = 'product' and a.attachment_type = 1
+    where p.product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from product
+    where product_id = #{productId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yskj.Entity.Product" useGeneratedKeys="true" keyProperty="productId">
+    insert into product (product_id, product_name, two_type_id,
+    product_model, language_type, recommend,
+    one_type_id, product_size, product_context,product_url
+    )
+    values (#{productId,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, #{twoTypeId,jdbcType=INTEGER},
+    #{productModel,jdbcType=VARCHAR}, #{languageType,jdbcType=INTEGER}, #{recommend,jdbcType=INTEGER},
+    #{oneTypeId,jdbcType=INTEGER}, #{productSize,jdbcType=VARCHAR}, #{productContext,jdbcType=LONGVARCHAR},
+    #{productUrl,jdbcType=VARCHAR}
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yskj.Entity.Product" useGeneratedKeys="true" keyProperty="productId">
+    insert into product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="twoTypeId != null" >
+        two_type_id,
+      </if>
+      <if test="productModel != null" >
+        product_model,
+      </if>
+      <if test="languageType != null" >
+        language_type,
+      </if>
+      <if test="recommend != null" >
+        recommend,
+      </if>
+      <if test="oneTypeId != null" >
+        one_type_id,
+      </if>
+      <if test="productSize != null" >
+        product_size,
+      </if>
+      <if test="productContext != null" >
+        product_context,
+      </if>
+      <if test="productUrl != null" >
+        product_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="twoTypeId != null" >
+        #{twoTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="productModel != null" >
+        #{productModel,jdbcType=VARCHAR},
+      </if>
+      <if test="languageType != null" >
+        #{languageType,jdbcType=INTEGER},
+      </if>
+      <if test="recommend != null" >
+        #{recommend,jdbcType=INTEGER},
+      </if>
+      <if test="oneTypeId != null" >
+        #{oneTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="productSize != null" >
+        #{productSize,jdbcType=VARCHAR},
+      </if>
+      <if test="productContext != null" >
+        #{productContext,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="productUrl != null" >
+        #{productUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yskj.Entity.Product" >
+    update product
+    <set >
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="twoTypeId != null" >
+        two_type_id = #{twoTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="productModel != null" >
+        product_model = #{productModel,jdbcType=VARCHAR},
+      </if>
+      <if test="languageType != null" >
+        language_type = #{languageType,jdbcType=INTEGER},
+      </if>
+      <if test="recommend != null" >
+        recommend = #{recommend,jdbcType=INTEGER},
+      </if>
+      <if test="oneTypeId != null" >
+        one_type_id = #{oneTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="productSize != null" >
+        product_size = #{productSize,jdbcType=VARCHAR},
+      </if>
+      <if test="productContext != null" >
+        product_context = #{productContext,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="productUrl != null" >
+        product_url = #{productUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.yskj.Entity.Product" >
+    update product
+    set product_name = #{productName,jdbcType=VARCHAR},
+    two_type_id = #{twoTypeId,jdbcType=INTEGER},
+    product_model = #{productModel,jdbcType=VARCHAR},
+    language_type = #{languageType,jdbcType=INTEGER},
+    recommend = #{recommend,jdbcType=INTEGER},
+    one_type_id = #{oneTypeId,jdbcType=INTEGER},
+    product_size = #{productSize,jdbcType=VARCHAR},
+    product_context = #{productContext,jdbcType=LONGVARCHAR},
+    product_url = #{productUrl,jdbcType=VARCHAR}
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yskj.Entity.Product" >
+    update product
+    set product_name = #{productName,jdbcType=VARCHAR},
+      two_type_id = #{twoTypeId,jdbcType=INTEGER},
+      product_model = #{productModel,jdbcType=VARCHAR},
+      language_type = #{languageType,jdbcType=INTEGER},
+      recommend = #{recommend,jdbcType=INTEGER},
+      one_type_id = #{oneTypeId,jdbcType=INTEGER},
+      product_size = #{productSize,jdbcType=VARCHAR},
+      product_url = #{productUrl,jdbcType=VARCHAR}
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+
+  <select id="list" parameterType="Map" resultMap="ResultMapWithBLOBs">
+    select * from product
+    order by product_id DESC
+    <if test="start!=null and size!=null">
+      limit #{start},#{size}
+    </if>
+
+  </select>
+
+  <select id="getTotal" parameterType="Map" resultType="Long">
+    select count(*) from product
+  </select>
+</mapper>

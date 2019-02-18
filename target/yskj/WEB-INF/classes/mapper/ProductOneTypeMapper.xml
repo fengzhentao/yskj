@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yskj.dao.ProductOneTypeDao" >
+  <resultMap id="BaseResultMap" type="com.yskj.Entity.ProductOneType" >
+    <id column="one_type_id" property="oneTypeId" jdbcType="INTEGER" />
+    <result column="one_type_name" property="oneTypeName" jdbcType="VARCHAR" />
+    <result column="language_type" property="languageType" jdbcType="INTEGER" />
+    <result column="recommend" property="recommend" jdbcType="INTEGER" />
+    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="LeftClassResultMap" type="com.yskj.dto.LeftClassVo" extends="BaseResultMap">
+    <collection property="productTwoTypes" ofType="com.yskj.Entity.ProductTwoType">
+      <id column="two_type_id" property="twoTypeId" jdbcType="INTEGER" />
+      <result column="two_type_name" property="twoTypeName" jdbcType="VARCHAR" />
+      <result column="one_type_id" property="oneTypeId" jdbcType="INTEGER" />
+      <result column="language_type" property="languageType" jdbcType="INTEGER" />
+      <result column="recommend" property="recommend" jdbcType="INTEGER" />
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    one_type_id, one_type_name, language_type
+  </sql>
+  <select id="list" parameterType="Map" resultMap="BaseResultMap">
+    select * from product_one_type
+    <if test="start!=null and size!=null">
+      limit #{start},#{size}
+    </if>
+  </select>
+
+  <select id="getTotal" parameterType="Map" resultType="Long">
+    select count(*) from product_one_type
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from product_one_type
+    where one_type_id = #{oneTypeId,jdbcType=INTEGER}
+  </select>
+
+  <select id="getLeftClass" resultMap="LeftClassResultMap">
+    select * from product_one_type pot left join product_two_type ptt on pot.one_type_id = ptt.one_type_id
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from product_one_type
+    where one_type_id = #{oneTypeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yskj.Entity.ProductOneType" useGeneratedKeys="true" keyProperty="oneTypeId">
+    insert into product_one_type (one_type_id, one_type_name, language_type,recommend, image_url
+      )
+    values (#{oneTypeId,jdbcType=INTEGER}, #{oneTypeName,jdbcType=VARCHAR}, #{languageType,jdbcType=INTEGER},#{recommend,jdbcType=INTEGER}, #{imageUrl,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yskj.Entity.ProductOneType" useGeneratedKeys="true" keyProperty="oneTypeId">
+    insert into product_one_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="oneTypeId != null" >
+        one_type_id,
+      </if>
+      <if test="oneTypeName != null" >
+        one_type_name,
+      </if>
+      <if test="languageType != null" >
+        language_type,
+      </if>
+      <if test="recommend != null" >
+        recommend,
+      </if>
+      <if test="imageUrl != null" >
+        image_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="oneTypeId != null" >
+        #{oneTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="oneTypeName != null" >
+        #{oneTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="languageType != null" >
+        #{languageType,jdbcType=INTEGER},
+      </if>
+      <if test="recommend != null" >
+        #{recommend,jdbcType=INTEGER},
+      </if>
+      <if test="imageUrl != null" >
+        #{imageUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yskj.Entity.ProductOneType" >
+    update product_one_type
+    <set >
+      <if test="oneTypeName != null" >
+        one_type_name = #{oneTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="languageType != null" >
+        language_type = #{languageType,jdbcType=INTEGER},
+      </if>
+      <if test="recommend != null" >
+        recommend = #{recommend,jdbcType=INTEGER},
+      </if>
+      <if test="imageUrl != null" >
+        image_url = #{imageUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where one_type_id = #{oneTypeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yskj.Entity.ProductOneType" >
+    update product_one_type
+    set one_type_name = #{oneTypeName,jdbcType=VARCHAR},
+      language_type = #{languageType,jdbcType=INTEGER},
+      recommend = #{recommend,jdbcType=INTEGER},
+      image_url = #{imageUrl,jdbcType=VARCHAR}
+    where one_type_id = #{oneTypeId,jdbcType=INTEGER}
+  </update>
+</mapper>

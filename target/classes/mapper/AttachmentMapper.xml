@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yskj.dao.AttachmentDao" >
+  <resultMap id="BaseResultMap" type="com.yskj.Entity.Attachment" >
+    <id column="attachment_id" property="attachmentId" jdbcType="INTEGER" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="table_id" property="tableId" jdbcType="INTEGER" />
+    <result column="attachment_type" property="attachmentType" jdbcType="INTEGER" />
+    <result column="language" property="language" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="attachment_name" property="attachmentName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    attachment_id, table_name, table_id, attachment_type, language, url, attachment_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from attachment
+    where attachment_id = #{attachmentId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectList" resultMap="BaseResultMap" parameterType="com.yskj.Entity.Attachment">
+    select
+    <include refid="Base_Column_List" />
+    from attachment
+    where 1=1
+    <if test="tableName != null" >
+      and table_name = #{tableName}
+    </if>
+    <if test="tableId != null" >
+      and table_id = #{tableId}
+    </if>
+    <if test="attachmentType != null" >
+      and attachment_type = #{attachmentType}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from attachment
+    where attachment_id = #{attachmentId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yskj.Entity.Attachment" >
+    insert into attachment (attachment_id, table_name, table_id, 
+      attachment_type, language, url, 
+      attachment_name)
+    values (#{attachmentId,jdbcType=INTEGER}, #{tableName,jdbcType=VARCHAR}, #{tableId,jdbcType=INTEGER}, 
+      #{attachmentType,jdbcType=INTEGER}, #{language,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, 
+      #{attachmentName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yskj.Entity.Attachment" >
+    insert into attachment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="attachmentId != null" >
+        attachment_id,
+      </if>
+      <if test="tableName != null" >
+        table_name,
+      </if>
+      <if test="tableId != null" >
+        table_id,
+      </if>
+      <if test="attachmentType != null" >
+        attachment_type,
+      </if>
+      <if test="language != null" >
+        language,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="attachmentName != null" >
+        attachment_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="attachmentId != null" >
+        #{attachmentId,jdbcType=INTEGER},
+      </if>
+      <if test="tableName != null" >
+        #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="tableId != null" >
+        #{tableId,jdbcType=INTEGER},
+      </if>
+      <if test="attachmentType != null" >
+        #{attachmentType,jdbcType=INTEGER},
+      </if>
+      <if test="language != null" >
+        #{language,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentName != null" >
+        #{attachmentName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yskj.Entity.Attachment" >
+    update attachment
+    <set >
+      <if test="tableName != null" >
+        table_name = #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="tableId != null" >
+        table_id = #{tableId,jdbcType=INTEGER},
+      </if>
+      <if test="attachmentType != null" >
+        attachment_type = #{attachmentType,jdbcType=INTEGER},
+      </if>
+      <if test="language != null" >
+        language = #{language,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentName != null" >
+        attachment_name = #{attachmentName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where attachment_id = #{attachmentId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yskj.Entity.Attachment" >
+    update attachment
+    set table_name = #{tableName,jdbcType=VARCHAR},
+      table_id = #{tableId,jdbcType=INTEGER},
+      attachment_type = #{attachmentType,jdbcType=INTEGER},
+      language = #{language,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      attachment_name = #{attachmentName,jdbcType=VARCHAR}
+    where attachment_id = #{attachmentId,jdbcType=INTEGER}
+  </update>
+</mapper>

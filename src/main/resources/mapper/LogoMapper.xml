@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yskj.dao.LogoDao" >
+  <resultMap id="BaseResultMap" type="com.yskj.Entity.Logo" >
+    <id column="logo_id" property="logoId" jdbcType="INTEGER" />
+    <result column="logo_url" property="logoUrl" jdbcType="VARCHAR" />
+    <result column="recommend" property="recommend" jdbcType="INTEGER" />
+    <result column="logo_type" property="logoType" jdbcType="INTEGER" />
+    <result column="creat_time" property="creatTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    logo_id, logo_url, recommend, logo_type, creat_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from logo
+    where logo_id = #{logoId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from logo
+    where logo_id = #{logoId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yskj.Entity.Logo" >
+    insert into logo (logo_id, logo_url, recommend,
+    logo_type, creat_time)
+    values (#{logoId,jdbcType=INTEGER}, #{logoUrl,jdbcType=VARCHAR}, #{recommend,jdbcType=INTEGER},
+    #{logoType,jdbcType=INTEGER}, #{creatTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yskj.Entity.Logo" >
+    insert into logo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="logoId != null" >
+        logo_id,
+      </if>
+      <if test="logoUrl != null" >
+        logo_url,
+      </if>
+      <if test="recommend != null" >
+        recommend,
+      </if>
+      <if test="logoType != null" >
+        logo_type,
+      </if>
+      <if test="creatTime != null" >
+        creat_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="logoId != null" >
+        #{logoId,jdbcType=INTEGER},
+      </if>
+      <if test="logoUrl != null" >
+        #{logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="recommend != null" >
+        #{recommend,jdbcType=INTEGER},
+      </if>
+      <if test="logoType != null" >
+        #{logoType,jdbcType=INTEGER},
+      </if>
+      <if test="creatTime != null" >
+        #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yskj.Entity.Logo" >
+    update logo
+    <set >
+      <if test="logoUrl != null" >
+        logo_url = #{logoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="recommend != null" >
+        recommend = #{recommend,jdbcType=INTEGER},
+      </if>
+      <if test="logoType != null" >
+        logo_type = #{logoType,jdbcType=INTEGER},
+      </if>
+      <if test="creatTime != null" >
+        creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where logo_id = #{logoId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yskj.Entity.Logo" >
+    update logo
+    set logo_url = #{logoUrl,jdbcType=VARCHAR},
+      recommend = #{recommend,jdbcType=INTEGER},
+      logo_type = #{logoType,jdbcType=INTEGER},
+      creat_time = #{creatTime,jdbcType=TIMESTAMP}
+    where logo_id = #{logoId,jdbcType=INTEGER}
+  </update>
+
+  <select id="list" parameterType="Map" resultMap="BaseResultMap">
+    select * from logo
+    where 1=1
+    <if test="logoType != null" >
+      and logo_type = #{logoType}
+    </if>
+    <if test="start!=null and size!=null">
+      limit #{start},#{size}
+    </if>
+  </select>
+
+  <select id="getTotal" parameterType="Map" resultType="Long">
+    select count(*) from logo
+  </select>
+</mapper>

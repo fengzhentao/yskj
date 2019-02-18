@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yskj.dao.SloganDao" >
+  <resultMap id="BaseResultMap" type="com.yskj.Entity.Slogan" >
+    <id column="slogan_id" property="sloganId" jdbcType="INTEGER" />
+    <result column="slogan_name" property="sloganName" jdbcType="VARCHAR" />
+    <result column="slogan_context" property="sloganContext" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    slogan_id, slogan_name, slogan_context
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from slogan
+    where slogan_id = #{sloganId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from slogan
+    where slogan_id = #{sloganId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yskj.Entity.Slogan" >
+    insert into slogan (slogan_id, slogan_name, slogan_context
+      )
+    values (#{sloganId,jdbcType=INTEGER}, #{sloganName,jdbcType=VARCHAR}, #{sloganContext,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yskj.Entity.Slogan" >
+    insert into slogan
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sloganId != null" >
+        slogan_id,
+      </if>
+      <if test="sloganName != null" >
+        slogan_name,
+      </if>
+      <if test="sloganContext != null" >
+        slogan_context,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sloganId != null" >
+        #{sloganId,jdbcType=INTEGER},
+      </if>
+      <if test="sloganName != null" >
+        #{sloganName,jdbcType=VARCHAR},
+      </if>
+      <if test="sloganContext != null" >
+        #{sloganContext,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yskj.Entity.Slogan" >
+    update slogan
+    <set >
+      <if test="sloganName != null" >
+        slogan_name = #{sloganName,jdbcType=VARCHAR},
+      </if>
+      <if test="sloganContext != null" >
+        slogan_context = #{sloganContext,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where slogan_id = #{sloganId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yskj.Entity.Slogan" >
+    update slogan
+    set slogan_name = #{sloganName,jdbcType=VARCHAR},
+      slogan_context = #{sloganContext,jdbcType=VARCHAR}
+    where slogan_id = #{sloganId,jdbcType=INTEGER}
+  </update>
+
+  <select id="list" parameterType="Map" resultMap="BaseResultMap">
+    select * from slogan
+    <if test="start!=null and size!=null">
+      limit #{start},#{size}
+    </if>
+  </select>
+
+  <select id="getTotal" parameterType="Map" resultType="Long">
+    select count(*) from slogan
+  </select>
+</mapper>
